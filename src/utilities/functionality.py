@@ -6,6 +6,7 @@ from flask import jsonify , abort
 from datetime import datetime , timedelta
 
 from schemaObj import user_otp
+from src.database.crud import get_user_by_username
 
 # genrate random Otp
 def generate_OTP():
@@ -74,9 +75,5 @@ def verify_otp(user , otp):
         return jsonify({"message" : "Otp is verify successfully"})
     except Exception as e:
         return {"error : " : str(e)} 
-    
-
-
-
 
     

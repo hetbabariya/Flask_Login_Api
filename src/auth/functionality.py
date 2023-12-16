@@ -1,5 +1,5 @@
 from werkzeug.security import check_password_hash
-from flask_jwt_extended import create_access_token , create_refresh_token  , set_access_cookies , unset_jwt_cookies
+from flask_jwt_extended import create_access_token , set_access_cookies , unset_jwt_cookies
 from flask import abort , jsonify , make_response
 
 # login 
