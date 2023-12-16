@@ -16,6 +16,7 @@ class User(db.Model):
     is_valid = db.Column(db.Boolean, nullable=False , default = False)
     is_delete = db.Column(db.Boolean, nullable=False , default = False)
     OTP = db.Column(db.String)
+    otp_send_at = db.Column(db.DateTime()) 
     created_at = db.Column(db.DateTime(), default=datetime.now())
     updated_at = db.Column(db.DateTime(), default=datetime.now(), onupdate=datetime.now())
 

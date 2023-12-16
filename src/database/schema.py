@@ -13,3 +13,7 @@ class UserResponse(ma.Schema):
     class Meta :
         fields = ('id' , 'username' , 'email' , 'OTP')
 
+class UserOtp(ma.Schema):
+    class Meta :
+        fields = ['otp_send_at']
+
