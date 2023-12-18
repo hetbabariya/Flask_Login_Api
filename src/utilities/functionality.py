@@ -6,7 +6,7 @@ from flask import jsonify , abort
 from datetime import datetime , timedelta
 
 from schemaObj import user_otp
-from src.database.crud import get_user_by_username
+# from src.database.crud import get_user_by_username
 
 # genrate random Otp
 def generate_OTP():

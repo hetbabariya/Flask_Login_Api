@@ -1,6 +1,7 @@
 from flask import Flask
 
-from src.database.model import  db
+# from src.database.model import  db
+from src.database.ext import  db
 from config import Config
 from view import register_user_db, read_user, sent_user_otp, verify_user_otp, login, logout
 from src.auth.config import jwt , initialize_jwt
@@ -30,9 +31,11 @@ db.init_app(app)
 # initalize with app
 jwt.init_app(app)
 
-# create db model
-with app.app_context():
-    db.create_all()
+# app.app_context().push()
+
+# # create db model
+# with app.app_context():
+#     db.create_all()
 
 
 
