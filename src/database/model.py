@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import UUID
-from datetime import datetime
+from datetime import datetime , timezone
 import uuid
 
 from src.database.ext import db

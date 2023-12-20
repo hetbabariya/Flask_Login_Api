@@ -1,5 +1,6 @@
-from src.database.schema import UserResponse , UserRequest , UserOtp
+from src.database.schema import UserResponse , UserRequest , UserForgrtPwd , UserChangePwd
 
 user_response = UserResponse()
 user_request = UserRequest()
-user_otp = UserOtp()
+User_forgrt_pwd = UserForgrtPwd()
+user_change_pwd = UserChangePwd()

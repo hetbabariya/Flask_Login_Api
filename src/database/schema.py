@@ -11,9 +11,14 @@ class UserRequest(ma.Schema):
 
 class UserResponse(ma.Schema):
     class Meta :
-        fields = ('id' , 'username' , 'email' , 'OTP')
+        fields = ('id' , 'username' , 'email')
 
-class UserOtp(ma.Schema):
-    class Meta :
-        fields = ['otp_send_at']
+class UserForgrtPwd(ma.Schema):
+    email = fields.Str(required=True , error_messages={"ERROR" : "It is required"})
+    new_password = fields.Str(required=True , error_messages={"ERROR" : "It is required"})
+    otp = fields.Str(required=True , error_messages={"ERROR" : "It is required"})
 
+class UserChangePwd(ma.Schema):
+    old_password = fields.Str(required=True , error_messages={"ERROR" : "It is required"})
+    new_password = fields.Str(required=True , error_messages={"ERROR" : "It is required"})
+    

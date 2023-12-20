@@ -3,7 +3,7 @@ from flask import Flask
 # from src.database.model import  db
 from src.database.ext import  db
 from config import Config
-from view import register_user_db, read_user, sent_user_otp, verify_user_otp, login, logout
+from view import register_user_db, read_user, sent_user_otp, verify_user_otp, login, logout , forget_pwd , change_pwd , delete_act , refresh
 from src.auth.config import jwt , initialize_jwt
 
 
@@ -20,6 +20,10 @@ app.register_blueprint(sent_user_otp)
 app.register_blueprint(verify_user_otp)
 app.register_blueprint(login)
 app.register_blueprint(logout)
+app.register_blueprint(forget_pwd)
+app.register_blueprint(change_pwd)
+app.register_blueprint(delete_act)
+app.register_blueprint(refresh)
 
 
 #  config with database config
