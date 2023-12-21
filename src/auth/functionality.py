@@ -18,9 +18,6 @@ def login_user(User , username , password):
     access_token =  create_access_token(identity=user_data.username)
     referesh_token = create_refresh_token(identity=user_data.username)
 
-    # headers = request.headers
-    # bearer = headers.get('Authorization')    # Bearer YourTokenHere
-    # token = bearer.split()[1]
     g.user = decode_token(access_token)
 
     return jsonify(access_token = access_token , refersh_token = referesh_token)

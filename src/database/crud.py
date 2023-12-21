@@ -32,6 +32,15 @@ def get_user_by_username(User , username):
 
     return user_data
 
+# get by id
+def get_user_by_id(User , user_id):
+    user_data = User.query.filter_by(user_id = user_id).first()
+
+    if user_data is None : 
+        abort(404)
+
+    return user_data
+
 # get user by email
 def get_user_by_email(User , email):
     try :

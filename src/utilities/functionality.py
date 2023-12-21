@@ -154,7 +154,6 @@ def change_password(old_pwd , new_pwd , current_user , User):
 def delete_user(current_user , User):
 
     user_data = get_user_by_username(User , username=current_user)
-
     user_data.is_delete = True
     db.session.commit()
     return jsonify({"message" : f"{current_user} has been deleted "}),204

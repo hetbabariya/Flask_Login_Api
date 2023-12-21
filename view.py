@@ -1,12 +1,13 @@
-from flask import Blueprint , request , jsonify , g 
+from flask import Blueprint , request , jsonify , g
 from flask_jwt_extended import get_jwt_identity , create_access_token , decode_token
 
 from src.database.model import db , User
-from src.database.crud import create_user , get_user_by_username , get_user_by_email
+from src.database.crud import create_user , get_user_by_username , get_user_by_email , get_user_by_id
 from src.utilities.functionality import verify_otp , store_otp , forget_password , change_password , delete_user
 from flask_jwt_extended import jwt_required
 from src.auth.functionality import login_user , logout_user
 from schemaObj import User_forgrt_pwd , user_response , user_change_pwd
+# from src.auth.functionality import 
 
 
 register_user_db = Blueprint("register_users" , __name__)
@@ -104,7 +105,14 @@ def read_user_by_username():
     # headers = request.headers
     # bearer = headers.get('Authorization')    # Bearer YourTokenHere
     # token = bearer.split()[1]
-    response =  get_user_by_username(User=User , username=g.user['sub'])
+    response =  get_user_by_username(User=User , username= g.user['sub'])
+    return user_response.jsonify(response)
+
+# get by id
+@read_user.route("/get_by_id" , methods = ['GET'])
+@jwt_required()
+def read_user_by_id():
+    response =  get_user_by_id(User=User , user_id = g.user.get('sub'))
     return user_response.jsonify(response)
     
 
