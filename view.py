@@ -1,13 +1,12 @@
 from flask import Blueprint , request , jsonify , g
 from flask_jwt_extended import get_jwt_identity , create_access_token , decode_token
 
-from src.database.model import db , User
+from src.database.model.user import db , User
 from src.database.crud import create_user , get_user_by_username , get_user_by_email , get_user_by_id
 from src.utilities.functionality import verify_otp , store_otp , forget_password , change_password , delete_user
 from flask_jwt_extended import jwt_required
 from src.auth.functionality import login_user , logout_user
 from schemaObj import User_forgrt_pwd , user_response , user_change_pwd
-# from src.auth.functionality import 
 
 
 register_user_db = Blueprint("register_users" , __name__)
@@ -65,12 +64,11 @@ def forget_user_password():
     return response
 
 # change password
-@change_pwd.route("/change_pwd",methods=['GET'])
+@change_pwd.route("/change_pwd",methods=['POST'])
 @jwt_required()
 def change_user_password():
     user_data = user_change_pwd.load(request.json)
     current_user = get_jwt_identity()
-    print("current_user : ",current_user)
     response = change_password(old_pwd=user_data['old_password'] , new_pwd=user_data['new_password'] , current_user=current_user , User=User)
     return response 
 

@@ -1,7 +1,5 @@
 from flask import abort , jsonify ,request
 from passlib.context import CryptContext
-
-# from src.database.model import User
 from schemaObj import user_request
 
 # genrate hash pwd
@@ -15,7 +13,7 @@ def create_user(db , User):
     try:
         user_data = user_request.load(request.json)
         hashed_password = generate_hash_password(user_data['password'])
-        new_user = User(username = user_data['username'] ,email =  user_data['email'] , password = hashed_password)
+        new_user = User(username = user_data['username'] ,email =  user_data['email'] , password = hashed_password , is_public = user_data['is_public'])
         db.session.add(new_user)
         db.session.commit()
         return jsonify({"message" : "data created"}),201
@@ -34,7 +32,7 @@ def get_user_by_username(User , username):
 
 # get by id
 def get_user_by_id(User , user_id):
-    user_data = User.query.filter_by(user_id = user_id).first()
+    user_data = User.query.filter_by(id = user_id).first()
 
     if user_data is None : 
         abort(404)

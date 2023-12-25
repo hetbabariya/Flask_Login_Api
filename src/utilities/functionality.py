@@ -7,7 +7,7 @@ from datetime import datetime  , timedelta
 import hashlib
 
 from src.database.crud import get_user_by_email , generate_hash_password , get_user_by_username
-from src.database.model import db
+from src.database.model.user import db
 from src.database.crud import pwd_context
 
 
