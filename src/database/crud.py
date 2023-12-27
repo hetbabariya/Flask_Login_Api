@@ -1,6 +1,6 @@
 from flask import abort , jsonify ,request
 from passlib.context import CryptContext
-from schemaObj import user_request
+from schemaObj import user_request , user_response
 
 # genrate hash pwd
 pwd_context = CryptContext(schemes=['bcrypt'] , deprecated = "auto")
@@ -19,20 +19,31 @@ def create_user(db , User):
         return jsonify({"message" : "data created"}),201
     except Exception as e:
         return jsonify({"error " : str(e)})
+    
 
 
-# get user by username
-def get_user_by_username(User , username):
-    user_data = User.query.filter_by(username = username).first()
 
+
+
+# get all user
+def get_all_user(User):
+    user_data = User.query.all()
     if user_data is None : 
         abort(404)
 
+    return user_response.dump(user_data)
+
+# get user by username
+def get_user_by_username(User , username):
+    user_data = User.query.filter_by(username = username , is_delete = False).first()
+    if user_data is None : 
+        abort(404)
+    print(user_data)
     return user_data
 
 # get by id
 def get_user_by_id(User , user_id):
-    user_data = User.query.filter_by(id = user_id).first()
+    user_data = User.query.filter_by(id = user_id , is_delete = False).first()
 
     if user_data is None : 
         abort(404)
@@ -41,11 +52,10 @@ def get_user_by_id(User , user_id):
 
 # get user by email
 def get_user_by_email(User , email):
-    try :
-        user_data = User.query.filter_by(email = email).one_or_none()
-        if user_data is None : 
-            abort(404 , {"message": "Data Not Found"})
-        return user_data
-    except Exception as e:
-        return jsonify({"error " : str(e)})
+    user_data = User.query.filter_by(email = email , is_delete = False).one_or_none()
+
+    if user_data is None : 
+        abort(404 , {"message": "Data Not Found"})
+
+    return user_data
     

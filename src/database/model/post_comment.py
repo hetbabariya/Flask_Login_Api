@@ -2,10 +2,9 @@ from sqlalchemy.dialects.postgresql import UUID
 from datetime import datetime
 from src.database.model.post_comment_like import PostCommentLike
 from src.database.model.comment_reply import PostCommentReply
+from src.database.ext import db
 
 import uuid
-
-from src.database.ext import db
 
 
 class PostComment(db.Model):
@@ -23,5 +22,5 @@ class PostComment(db.Model):
 
     postComment_table_post_relation = db.relationship('Post' , back_populates = "postComment_post_relation")
     postComment_table_user_relation = db.relationship('User' , back_populates = "postComment_user_relation")
-    postComment_table_postCommentLike_relation = db.relationship('PostCommentLike' , back_populates = "postCommentLike_table_postComment_relation")
     postComment_table_comment_reply_relation = db.relationship('PostCommentReply' , back_populates = "postCommentReply_table_comment_relation")
+    postComment_table_postCommentLike_relation = db.relationship('PostCommentLike' , back_populates = "postCommentLike_table_postComment_relation")

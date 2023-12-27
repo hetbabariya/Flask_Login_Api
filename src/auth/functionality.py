@@ -15,10 +15,10 @@ def login_user(User , username , password):
     if user_data.is_delete == True:
         abort(404,"Data Not Found")
 
-    access_token =  create_access_token(identity=user_data.username)
-    referesh_token = create_refresh_token(identity=user_data.username)
+    access_token =  create_access_token(identity=user_data.id)
+    referesh_token = create_refresh_token(identity=user_data.id)
 
-    g.user = decode_token(access_token)
+    # g.user = decode_token(access_token)
 
     return jsonify(access_token = access_token , refersh_token = referesh_token)
 

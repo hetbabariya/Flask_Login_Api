@@ -17,4 +17,9 @@ class FollowerFollowing(db.Model):
     follower_table_user_relation = db.relationship('User' , back_populates = "follower_user_relation" ,foreign_keys=[followed_by])
 
 
+
+
+    
+
+
     

@@ -6,7 +6,7 @@ from flask import jsonify , abort , request
 from datetime import datetime  , timedelta
 import hashlib
 
-from src.database.crud import get_user_by_email , generate_hash_password , get_user_by_username
+from src.database.crud import get_user_by_email , generate_hash_password , get_user_by_id
 from src.database.model.user import db
 from src.database.crud import pwd_context
 
@@ -134,9 +134,9 @@ def forget_password(new_pwd , email , otp , User):
         return jsonify({"error " : str(e)})
     
 # change pwd
-def change_password(old_pwd , new_pwd , current_user , User):
+def change_password(old_pwd , new_pwd , current_user_id , User):
     try :
-        user_data = get_user_by_username(User=User , username=current_user)
+        user_data = get_user_by_id(User , user_id=current_user_id)
 
         if not verify_password(old_pwd , user_data.password) :
             abort(404 , "Wrong old Password")
@@ -151,9 +151,9 @@ def change_password(old_pwd , new_pwd , current_user , User):
     
 
 # delete user
-def delete_user(current_user , User):
-
-    user_data = get_user_by_username(User , username=current_user)
+def delete_user(current_user_id , User):
+    user_data = get_user_by_id(User , user_id=current_user_id)
     user_data.is_delete = True
     db.session.commit()
-    return jsonify({"message" : f"{current_user} has been deleted "}),204
+    return jsonify({"message" : f"{current_user_id} has been deleted "}),204
+
