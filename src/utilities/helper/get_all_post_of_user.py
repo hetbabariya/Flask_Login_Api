@@ -11,3 +11,4 @@ def get_all_posts_of_user( current_user_id):
         abort(404 , "Not Any Post Yet!")
 
     return post_response_all.dump(all_posts)
+

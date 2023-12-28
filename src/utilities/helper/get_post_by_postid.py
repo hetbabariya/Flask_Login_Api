@@ -12,6 +12,4 @@ def get_post_by_post_id( post_id):
     return post
 
     
-# post_id to all user comment
-# post_id to all user like
 

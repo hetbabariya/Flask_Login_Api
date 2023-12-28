@@ -1,5 +1,5 @@
 from flask import Blueprint , request , jsonify , g
-from flask_jwt_extended import get_jwt_identity , create_access_token , decode_token
+from flask_jwt_extended import get_jwt_identity , create_access_token , decode_token , verify_jwt_in_request
 
 from src.database.model.user import db , User
 from src.database.model.post_model import Post
@@ -18,6 +18,14 @@ from src.utilities.helper.post_comment_update import update_post_comment
 from src.utilities.helper.get_all_post_of_user import get_all_posts_of_user
 from src.utilities.helper.post_id_all_like import all_like_by_post_id
 from src.utilities.helper.post_id_all_comment import all_comment_by_post_id
+from src.utilities.helper.comment_reply import create_comment_reply
+from src.utilities.helper.comment_reply_update import update_comment_reply
+from src.utilities.helper.comment_like import post_comment_like
+from src.utilities.helper.comment_reply_like import post_comment_reply_like
+from src.utilities.helper.comment_delete import comment_delete
+from src.utilities.helper.comment_reply_delete import comment_reply_delete
+from src.utilities.helper.comment_like_delete import comment_like_delete
+from src.utilities.helper.comment_reply_like_delete import comment_reply_like_delete
 from schemaObj import (
                         User_forgrt_pwd ,
                         user_response ,
@@ -28,7 +36,14 @@ from schemaObj import (
                         post_comment_schema ,
                         post_comment_update_schema,
                         user_response_single,
-                        post_id_rquest_schema
+                        post_id_rquest_schema,
+                        post_comment_reply_schema,
+                        post_comment_reply_update_schema,
+                        post_comment_like_request_schema,
+                        post_comment_reply_like_request_schema,
+                        post_comment_delete_request,
+                        post_comment_reply_delete_request,
+                        post_comment_like_delete_request
                        )
 
 
@@ -51,6 +66,14 @@ update_comment  = Blueprint("update_comment" , __name__)
 getAllPostOfUser  = Blueprint("get_all_post_of_user" , __name__)
 getAllUserOfLikeOfPostId  = Blueprint("get_all_user_of_like_of_post_id" , __name__)
 getAllUserOfCommentOfPostId  = Blueprint("get_all_user_of_comment_of_post_id" , __name__)
+post_comment_reply  = Blueprint("comment_reply" , __name__)
+UpdateCommentReply  = Blueprint("update_comment_reply" , __name__)
+commentLike  = Blueprint("comment_like" , __name__)
+commentReplyLike  = Blueprint("comment_reply_like" , __name__)
+commentDelete  = Blueprint("delete_comment" , __name__)
+commentReplyDelete  = Blueprint("delete_comment_reply" , __name__)
+commentLikeDelete  = Blueprint("delete_comment_like" , __name__)
+commentReplyLikeDelete  = Blueprint("delete_comment_reply_like" , __name__)
 
 
 # register user
@@ -189,19 +212,92 @@ def get_all_user_of_like():
 
 # get all comment_user of specific post
 @getAllUserOfCommentOfPostId.route('/get_user_of_comment' , methods=["GET"])
-@jwt_required()
+@jwt_required(locations=['headers'])
 def get_all_user_of_comemnt():
     data = post_id_rquest_schema.load(request.json)
     response = all_comment_by_post_id(post_id = data['post_id'])
     return response
 
 
+@post_comment_reply.route("/comemnt_reply",methods=['POST'])
+@jwt_required()
+def add_comment_reply():
+    data = post_comment_reply_schema.load(request.json)
+    user_id = get_jwt_identity()
+    response = create_comment_reply(comment_id=data['comment_id'] , comment_reply = data['comment_reply'] , user_id=user_id , db=db)
+    return response
+    
+
+
+@UpdateCommentReply.route("/update_comemnt_reply",methods=['PATCH'])
+@jwt_required()
+def comemnt_reply_update():
+    data = post_comment_reply_update_schema.load(request.json)
+    response = update_comment_reply(reply_id=data['reply_id'] , updated_comment_reply=data['comment_reply'] , db=db)
+    return response
+
+
+# comemnt like
+@commentLike.route("/comment_like" , methods = ['POST'])
+@jwt_required()
+def post_comment_like_by_user():
+    data = post_comment_like_request_schema.load(request.json)
+    user_id = get_jwt_identity()
+    response = post_comment_like(comment_id=data['comment_id'] , db=db , user_id=user_id)
+    return response
+
+
+# comment reply like
+@commentReplyLike.route("/comment_reply_like" , methods = ['POST'])
+@jwt_required()
+def post_comment_reply_like_by_user():
+    data = post_comment_reply_like_request_schema.load(request.json)
+    user_id = get_jwt_identity()
+    response = post_comment_reply_like(reply_id=data['reply_id'], db=db , user_id=user_id)
+    return response
+
+# delete comment 
+@commentDelete.route("/delete_comment",methods=['DELETE'])
+def post_comment_delete():
+    data = post_comment_delete_request.load(request.json)
+    response = comment_delete(comment_id=data['comment_id'] , db=db)
+    return response
 
 
 
+# comment_reply delete
+@commentReplyDelete.route("/delete_comment_reply",methods=['DELETE'])
+@jwt_required()
+def delete_comment_reply():
+    data = post_comment_reply_delete_request.load(request.json)
+    response = comment_reply_delete(comment_reply_id=data['comment_reply_id'],db=db)
+    return response
+
+# comment_like delete
+@commentLikeDelete.route("/delete_comment_like",methods=['DELETE'])
+@jwt_required()
+def delete_comment_like():
+    data = post_comment_like_delete_request.load(request.json)
+    response = comment_like_delete(comment_like_id=data['comment_like_id'] , db=db)
+    return response
 
 
+# comment_reply_like delete
+@commentReplyLikeDelete.route("/delete_comment_reply_like",methods=['DELETE'])
+@jwt_required()
+def delete_comment_reply_like():
+    data = post_comment_like_delete_request.load(request.json)
+    response = comment_reply_like_delete(comment_like_id=data['comment_like_id'],db=db)
+    return response
 
+
+# post_delete
+# delete_post_like
+# add return in data
+
+# jwt error
+# set path in {url}
+# code clean
 
 
 # get all user
@@ -228,6 +324,8 @@ def read_user_by_id():
     id = get_jwt_identity()
     response =  get_user_by_id(User=User , user_id = id)
     return user_response_single.dump(response)
+
+
 
 
 # get user by email [Temporary]

@@ -3,6 +3,7 @@ from flask import Flask
 # from src.database.model import  db
 from src.database.ext import  db
 from config import Config
+from src.auth.config import jwt , initialize_jwt
 from view import (
     register_user_db,
     read_user,
@@ -22,9 +23,16 @@ from view import (
     update_comment,
     getAllPostOfUser,
     getAllUserOfLikeOfPostId,
-    getAllUserOfCommentOfPostId
+    getAllUserOfCommentOfPostId,
+    post_comment_reply,
+    UpdateCommentReply,
+    commentLike,
+    commentReplyLike,
+    commentDelete ,
+    commentReplyDelete,
+    commentLikeDelete,
+    commentReplyLikeDelete
     )
-from src.auth.config import jwt , initialize_jwt
 
 
 app = Flask(__name__)
@@ -53,6 +61,14 @@ app.register_blueprint(getAllUser)
 app.register_blueprint(getAllPostOfUser)
 app.register_blueprint(getAllUserOfLikeOfPostId)
 app.register_blueprint(getAllUserOfCommentOfPostId)
+app.register_blueprint(post_comment_reply)
+app.register_blueprint(UpdateCommentReply)
+app.register_blueprint(commentLike)
+app.register_blueprint(commentReplyLike)
+app.register_blueprint(commentDelete)
+app.register_blueprint(commentReplyDelete)
+app.register_blueprint(commentLikeDelete)
+app.register_blueprint(commentReplyLikeDelete)
 
 
 #  config with database config
