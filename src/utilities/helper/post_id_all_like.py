@@ -8,7 +8,7 @@ def all_like_by_post_id(post_id):
     
     likes = PostLike.query.filter_by(post_id = post_id).all()
 
-    if likes is None:
+    if not likes:
         abort(404 , "Not Any Like!")
 
     return Post_like_all_user_response_schema.dump(likes)

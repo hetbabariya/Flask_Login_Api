@@ -5,9 +5,9 @@ from schemaObj import post_response_all
 
 def get_all_posts_of_user( current_user_id):
 
-    all_posts = Post.query.filter_by(user_id  = current_user_id).all() 
+    all_posts = Post.query.filter_by(user_id  = current_user_id , is_delete = False).all() 
 
-    if all_posts is None:
+    if not all_posts:
         abort(404 , "Not Any Post Yet!")
 
     return post_response_all.dump(all_posts)

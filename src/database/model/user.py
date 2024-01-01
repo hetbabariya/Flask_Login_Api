@@ -44,4 +44,4 @@ class User(db.Model):
     following_user_relation = db.relationship('FollowerFollowing' , back_populates = "following_table_user_relation" , foreign_keys="FollowerFollowing.user_id" )
     follower_user_relation = db.relationship('FollowerFollowing' , back_populates = "follower_table_user_relation" , foreign_keys="FollowerFollowing.followed_by" )
     followRequest_userid_user_relation = db.relationship('FollowRequest' , back_populates = "followRequest_userid_table_user_relation" , foreign_keys="FollowRequest.user_id" )
-    followRequest_requestid_user_relation = db.relationship('FollowRequest' , back_populates = "followRequest_request_id_table_user_relation" , foreign_keys="FollowRequest.request_user_id")
+    followRequest_requestid_user_relation = db.relationship('FollowRequest' , back_populates = "followRequest_request_id_table_user_relation" , foreign_keys="FollowRequest.request_by_user_id")   

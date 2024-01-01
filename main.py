@@ -31,7 +31,11 @@ from view import (
     commentDelete ,
     commentReplyDelete,
     commentLikeDelete,
-    commentReplyLikeDelete
+    commentReplyLikeDelete,
+    deletePostRequest,
+    deletePostLikeRequest,
+    followUser,
+    FollowrequestAccept
     )
 
 
@@ -69,6 +73,10 @@ app.register_blueprint(commentDelete)
 app.register_blueprint(commentReplyDelete)
 app.register_blueprint(commentLikeDelete)
 app.register_blueprint(commentReplyLikeDelete)
+app.register_blueprint(deletePostRequest)
+app.register_blueprint(deletePostLikeRequest)
+app.register_blueprint(followUser)
+app.register_blueprint(FollowrequestAccept)
 
 
 #  config with database config

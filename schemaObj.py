@@ -1,9 +1,10 @@
-from src.database.schema.schema import UserResponse , UserRequest , UserForgrtPwd , UserChangePwd
-from src.database.schema.post import CreatePost , UpdatePost , ResponsePost
-from src.database.schema.post_like import PostLikeSchema , PostLikeResponse
+from src.database.schema.user import UserResponse , UserRequest , UserForgrtPwd , UserChangePwd , UserRegisterResponse , AllUserResponse
+from src.database.schema.post import CreatePost , UpdatePost , ResponsePost , DeletePostRequest , postCreateResponse
+from src.database.schema.post_like import PostLikeSchema , PostLikeResponse , DeletePostLikeRequest
 from src.database.schema.post_comment import PostCommentSchema , PostCommentUpdateSchema , PostCommentResponseSchema , PostRequestForCommentUser , PostCommentDelRequest
 from src.database.schema.post_comment_reply import PostCommentReplySchema , PostCommentReplyUpdateSchema , PostCommentReplyResponseSchema , PostCommentRemoveRequest
 from src.database.schema.comemnt_and_reply_like import commentLikeRequestSchema , commentLikeResponseSchema , commmentReplyLikeRequestSchema  , commentLikeDelete
+from src.database.schema.follow import UserfollowRequestSchema
 
 
 user_response = UserResponse(many=True)
@@ -31,3 +32,9 @@ post_comment_like_response_schema = commentLikeResponseSchema()
 post_comment_delete_request = PostCommentDelRequest()
 post_comment_reply_delete_request = PostCommentRemoveRequest()
 post_comment_like_delete_request = commentLikeDelete()
+delete_post_request = DeletePostRequest()
+delete_post_like_request = DeletePostLikeRequest()
+user_follow_request_schema = UserfollowRequestSchema()
+user_registration_response_schema = UserRegisterResponse()
+all_user_response_schema = AllUserResponse()
+post_create_response_schema = postCreateResponse()

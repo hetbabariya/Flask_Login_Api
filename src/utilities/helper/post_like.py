@@ -5,7 +5,7 @@ from src.database.model.user import User
 
 def post_like_by_user(db , PostLike , post_id , current_user_id):
     try :
-        user = get_user_by_id(User=User , user_id=current_user_id)
+        user = get_user_by_id(user_id=current_user_id)
         
         # if not user:
         #     return jsonify({"error":"User does not exist"}), 404

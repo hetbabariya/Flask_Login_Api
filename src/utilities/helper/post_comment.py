@@ -7,7 +7,7 @@ def add_post_comment(db , PostComment , comment , post_id , user_id):
     try :
         post = get_post_by_post_id(post_id=post_id)
 
-        user = get_user_by_id(User=User , user_id=user_id)
+        user = get_user_by_id(user_id=user_id)
 
         new_comment = PostComment(comment = comment , user_id = user_id , post_id = post_id)
         db.session.add(new_comment)

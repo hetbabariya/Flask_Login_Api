@@ -14,6 +14,7 @@ def post_comment_reply_like(reply_id , db , user_id) :
     post_comment_reply_like = PostCommentLike(post_id = comment_reply_data.post_id , comment_id = comment_reply_data.comment_id , user_id = user_id , reply_id = reply_id)
     
     comment_reply_data.reply_like_count += 1
+    
     db.session.add(post_comment_reply_like)
     db.session.commit()
 

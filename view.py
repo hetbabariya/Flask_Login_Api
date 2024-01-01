@@ -26,6 +26,10 @@ from src.utilities.helper.comment_delete import comment_delete
 from src.utilities.helper.comment_reply_delete import comment_reply_delete
 from src.utilities.helper.comment_like_delete import comment_like_delete
 from src.utilities.helper.comment_reply_like_delete import comment_reply_like_delete
+from src.utilities.helper.delete_post import delete_post
+from src.utilities.helper.delete_post_like import delete_post_like
+from src.utilities.helper.user_follow_request import user_follow
+from src.utilities.helper.after_request_accept import store_in_follower_table
 from schemaObj import (
                         User_forgrt_pwd ,
                         user_response ,
@@ -43,7 +47,10 @@ from schemaObj import (
                         post_comment_reply_like_request_schema,
                         post_comment_delete_request,
                         post_comment_reply_delete_request,
-                        post_comment_like_delete_request
+                        post_comment_like_delete_request,
+                        delete_post_like_request,
+                        delete_post_request,
+                        user_follow_request_schema
                        )
 
 
@@ -74,6 +81,10 @@ commentDelete  = Blueprint("delete_comment" , __name__)
 commentReplyDelete  = Blueprint("delete_comment_reply" , __name__)
 commentLikeDelete  = Blueprint("delete_comment_like" , __name__)
 commentReplyLikeDelete  = Blueprint("delete_comment_reply_like" , __name__)
+deletePostRequest  = Blueprint("delete_post" , __name__)
+deletePostLikeRequest  = Blueprint("delete_post_like" , __name__)
+followUser  = Blueprint("follow_user" , __name__)
+FollowrequestAccept  = Blueprint("follow_request_accept" , __name__)
 
 
 # register user
@@ -128,7 +139,7 @@ def change_user_password():
     return response 
 
 # delete user
-@delete_act.route("/delete_user",methods = ['POST'])
+@delete_act.route("/delete_user",methods = ['DELETE'])
 @jwt_required()
 def delete_user_account():
     current_user_id = get_jwt_identity()
@@ -218,7 +229,7 @@ def get_all_user_of_comemnt():
     response = all_comment_by_post_id(post_id = data['post_id'])
     return response
 
-
+# comment reply
 @post_comment_reply.route("/comemnt_reply",methods=['POST'])
 @jwt_required()
 def add_comment_reply():
@@ -229,6 +240,7 @@ def add_comment_reply():
     
 
 
+# update comment reply
 @UpdateCommentReply.route("/update_comemnt_reply",methods=['PATCH'])
 @jwt_required()
 def comemnt_reply_update():
@@ -292,8 +304,43 @@ def delete_comment_reply_like():
 
 
 # post_delete
+@deletePostRequest.route("/delete_post",methods=['DELETE'])
+@jwt_required()
+def delete_user_post():
+    data = delete_post_request.load(request.json)
+    response = delete_post(db=db,post_id=data['post_id'])
+    return response
+
+
 # delete_post_like
+@deletePostLikeRequest.route("/delete_post_like",methods=['DELETE'])
+@jwt_required()
+def delete_user_post_like():
+    data = delete_post_like_request.load(request.json)
+    response = delete_post_like(db=db,like_id=data['like_id'])
+    return response
+
+
+# follow user
+@followUser.route("/follow_user" , methods=['POST'])
+@jwt_required()
+def follow_user():
+    data = user_follow_request_schema.load(request.json)
+    current_user_id = get_jwt_identity()
+    response = user_follow(db=db , follow_by_id=data['user_id'] , current_user_id=current_user_id)
+    return response
+
+# accept request
+@FollowrequestAccept.route("/accept_request" , methods=['POST'])
+@jwt_required()
+def accept_follow_user():
+    data = user_follow_request_schema.load(request.json)
+    current_user_id = get_jwt_identity()
+    response = store_in_follower_table(db=db , follow_by_id=data['user_id'] , current_user_id=current_user_id)
+    return response
+
 # add return in data
+# add delete user check
 
 # jwt error
 # set path in {url}
@@ -322,7 +369,7 @@ def read_user_by_username(username):
 @jwt_required()
 def read_user_by_id():
     id = get_jwt_identity()
-    response =  get_user_by_id(User=User , user_id = id)
+    response =  get_user_by_id(user_id = id)
     return user_response_single.dump(response)
 
 

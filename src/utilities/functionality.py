@@ -76,6 +76,7 @@ def store_otp(db , User):
         Hashed_otp = generate_hash_otp(otp)
         user.OTP = Hashed_otp
         user.otp_send_at = datetime.now()
+        print(user.otp_send_at)
         db.session.commit()
 
         return jsonify({"message" : "OTP sent successfuly"}),200
@@ -88,10 +89,11 @@ def verify_otp(User , email , otp ):
     try:
 
         user_data = get_user_by_email(User = User,email = email )
-
+        print("user_Data",user_data)
         if user_data is None:
             abort(404, 'OTP Not Found')
 
+        print("user_Dataafter",user_data.otp_send_at)
         current_utc_time = datetime.now()
 
         
@@ -114,7 +116,8 @@ def forget_password(new_pwd , email , otp , User):
     try:
         
         user_data = get_user_by_email(User,email )
-        
+        print("user_data" , user_data)
+        print("user_data" , user_data.otp_send_at)
         current_utc_time = datetime.now()
 
         if current_utc_time > user_data.otp_send_at + timedelta(minutes=3):
@@ -136,7 +139,7 @@ def forget_password(new_pwd , email , otp , User):
 # change pwd
 def change_password(old_pwd , new_pwd , current_user_id , User):
     try :
-        user_data = get_user_by_id(User , user_id=current_user_id)
+        user_data = get_user_by_id(user_id=current_user_id)
 
         if not verify_password(old_pwd , user_data.password) :
             abort(404 , "Wrong old Password")
@@ -152,7 +155,7 @@ def change_password(old_pwd , new_pwd , current_user_id , User):
 
 # delete user
 def delete_user(current_user_id , User):
-    user_data = get_user_by_id(User , user_id=current_user_id)
+    user_data = get_user_by_id(user_id=current_user_id)
     user_data.is_delete = True
     db.session.commit()
     return jsonify({"message" : f"{current_user_id} has been deleted "}),204

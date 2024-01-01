@@ -7,9 +7,20 @@ class CreatePost(ma.Schema):
 
 
 class ResponsePost(CreatePost):
-    class Meta : 
-        fields = ('id' ,'post','caption' ,'user_id' , 'like_count' , 'comment_count' , 'created_at') 
+    id = fields.UUID()
+    user_id = fields.UUID()
+    created_at = fields.DateTime()
+    like_count = fields.Integer()
+    comment_count = fields.Integer()
+
+class postCreateResponse(ma.Schema):
+    message = fields.String()
+    data = fields.List(fields.Nested(ResponsePost))
 
 class UpdatePost(ma.Schema):
     post_id = fields.UUID(required=True)
     caption = fields.String(required=True)
+
+class DeletePostRequest(ma.Schema):
+    post_id = fields.UUID()
+    

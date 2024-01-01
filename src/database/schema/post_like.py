@@ -7,3 +7,7 @@ class PostLikeSchema(ma.Schema):
 class PostLikeResponse(PostLikeSchema):
     class Meta : 
         fields = ('id' , 'post_id','user_id','like_at')
+
+
+class DeletePostLikeRequest(ma.Schema):
+    like_id = fields.UUID()
