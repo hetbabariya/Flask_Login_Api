@@ -18,6 +18,7 @@ from src.utilities.helper.post_comment_update import update_post_comment
 from src.utilities.helper.get_all_post_of_user import get_all_posts_of_user
 from src.utilities.helper.post_id_all_like import all_like_by_post_id
 from src.utilities.helper.post_id_all_comment import all_comment_by_post_id
+from src.utilities.helper.post_id_all_comment import all_comment_reply_by_comment_id
 from src.utilities.helper.comment_reply import create_comment_reply
 from src.utilities.helper.comment_reply_update import update_comment_reply
 from src.utilities.helper.comment_like import post_comment_like
@@ -50,7 +51,8 @@ from schemaObj import (
                         post_comment_like_delete_request,
                         delete_post_like_request,
                         delete_post_request,
-                        user_follow_request_schema
+                        user_follow_request_schema,
+                        post_comment_reply_request
                        )
 
 
@@ -88,75 +90,115 @@ FollowrequestAccept  = Blueprint("follow_request_accept" , __name__)
 
 
 # register user
-@register_user_db.route("/register_user" , methods = ['POST'])
+@register_user_db.route("/register_user/" , methods = ['POST'])
 def register_user():
     response = create_user(db=db , User=User)
     return response
 
 # sent OTP
-@sent_user_otp.route("/sent_otp" , methods = ['POST'])
+@sent_user_otp.route("/sent_otp/" , methods = ['POST'])
 def user_sent_otp():
-    response = store_otp(db=db , User=User)
+    response = store_otp(db=db)
     return response
 
 
 # verify otp
-@verify_user_otp.route('/verify_otp' , methods=['POST'] )
+@verify_user_otp.route('/verify_otp/' , methods=['POST'] )
 def verify_the_otp() :
     user_send_data = request.get_json()
-    response = verify_otp(User=User , email = user_send_data['email'] , otp = user_send_data['otp'])
+    response = verify_otp(email = user_send_data['email'] , otp = user_send_data['otp'])
     return response
 
 
 # login user
-@login.route('/login',methods = ['POST'])
+@login.route('/login/',methods = ['POST'])
 def login_the_user():
     user_data = request.get_json()
-    response = login_user(User=User , username=user_data['username'] , password=user_data['password'])
+    response = login_user(username=user_data['username'] , password=user_data['password'])
     return response
 
-
-# logout user
-@logout.route('/logout' , methods = ['Post'])
-def logout_the_user():
-    response = logout_user()
-    return response
-
-# forget password
-@forget_pwd.route('/forget_pwd' , methods = ['POST'])
-def forget_user_password():
-    user_data = User_forgrt_pwd.load(request.json)
-    response = forget_password(new_pwd=user_data['new_password'] , email = user_data['email'] ,  User=User , otp = user_data['otp'])
-    return response
-
-# change password
-@change_pwd.route("/change_pwd",methods=['POST'])
-@jwt_required()
-def change_user_password():
-    user_data = user_change_pwd.load(request.json)
-    current_user_id = get_jwt_identity()
-    response = change_password(old_pwd=user_data['old_password'] , new_pwd=user_data['new_password'] , current_user_id=current_user_id , User=User)
-    return response 
-
-# delete user
-@delete_act.route("/delete_user",methods = ['DELETE'])
-@jwt_required()
-def delete_user_account():
-    current_user_id = get_jwt_identity()
-    response = delete_user(current_user_id=current_user_id , User=User)
-    return response
 
 # refresh token
-@refresh.route("/refresh",methods = ['POST'])
+@refresh.route("/refresh/",methods = ['POST'])
 @jwt_required(refresh=True)
 def get_refresh_token():
     identity = get_jwt_identity()
     access_token = create_access_token(identity=identity)
     return jsonify(access_token = access_token)
 
+# logout user
+@logout.route('/logout/' , methods = ['Post'])
+def logout_the_user():
+    response = logout_user()
+    return response
+
+# forget password
+@forget_pwd.route('/forget_pwd/' , methods = ['POST'])
+def forget_user_password():
+    user_data = User_forgrt_pwd.load(request.json)
+    response = forget_password(new_pwd=user_data['new_password'] , email = user_data['email'] , otp = user_data['otp'])
+    return response
+
+# change password
+@change_pwd.route("/change_pwd/",methods=['POST'])
+@jwt_required()
+def change_user_password():
+    user_data = user_change_pwd.load(request.json)
+    current_user_id = get_jwt_identity()
+    response = change_password(old_pwd=user_data['old_password'] , new_pwd=user_data['new_password'] , current_user_id=current_user_id)
+    return response 
+
+# delete user
+@delete_act.route("/delete_user/",methods = ['DELETE'])
+@jwt_required()
+def delete_user_account():
+    current_user_id = get_jwt_identity()
+    response = delete_user(current_user_id=current_user_id)
+    return response
+
+
+# get all user
+@getAllUser.route("/get_all_user/" , methods = ['GET'])
+@jwt_required()
+def get_all_user_form_db():
+    response = get_all_user(User=User)
+    return response
+    
+
+# get user by username
+@read_user.route("/get_user/<string:username>/" , methods = ['GET'])
+@jwt_required()
+def read_user_by_username(username):
+    response =  get_user_by_username(username=username)
+    print(response)
+    return user_response_single.dump(response)
+
+
+# get by id
+@read_user.route("/get_by_id/" , methods = ['GET'])
+@jwt_required()
+def read_user_by_id():
+    id = get_jwt_identity()
+    response =  get_user_by_id(user_id = id)
+    return user_response_single.dump(response)
+
+
+# get user by email [Temporary]
+@read_user.route("/get_user/" , methods = ['GET'])
+@jwt_required()
+def read_user_by_email():
+    data = request.args.get("data")
+    respons =  get_user_by_email(email=data)    
+    return user_response_single.dump(respons)
+
+
+
+
+
+
 
 # create post
-@createpost.route("/create_post",methods =['POST'])
+@createpost.route("/create_post/",methods =['POST'])
 @jwt_required()
 def create_user_post():
     identity = get_jwt_identity()
@@ -166,16 +208,17 @@ def create_user_post():
 
 
 # update post - caption
-@updatePost.route("/update_caption" , methods = ['PATCH'])
+@updatePost.route("/update_caption/" , methods = ['PATCH'])
 @jwt_required()
 def update_caption():
+    identity = get_jwt_identity()
     data = update_post.load(request.json)
-    response = update_post_caption(post_id=data['post_id'] , caption = data['caption'] , db=db)
+    response = update_post_caption(post_id=data['post_id'] , caption = data['caption'] , db=db , user_id = identity)
     return response
 
 
 # post like
-@Postlike.route("/post_like" , methods = ['POST'])
+@Postlike.route("/post_like/" , methods = ['POST'])
 @jwt_required()
 def like_the_post():
     data = post_like.load(request.json)
@@ -184,8 +227,53 @@ def like_the_post():
     return response
 
 
+# post_delete
+@deletePostRequest.route("/delete_post/",methods=['DELETE'])
+@jwt_required()
+def delete_user_post():
+    identity = get_jwt_identity()
+    data = delete_post_request.load(request.json)
+    response = delete_post(db=db,post_id=data['post_id'],user_id = identity)
+    return response
+
+
+# delete_post_like
+@deletePostLikeRequest.route("/delete_post_like/",methods=['DELETE'])
+@jwt_required()
+def delete_user_post_like():
+    identity = get_jwt_identity()
+    data = delete_post_like_request.load(request.json)
+    response = delete_post_like(db=db,post_id=data['post_id'],user_id = identity)
+    return response
+
+
+# get all post of user
+@getAllPostOfUser.route("/get_all_posts/" , methods = ['GET'])
+@jwt_required()
+def get_all_post_by_user_id():
+    user_id = get_jwt_identity()
+    posts = get_all_posts_of_user(current_user_id=user_id)
+    return posts
+
+
+# get all like_user of  specific post
+@getAllUserOfLikeOfPostId.route('/get_user_of_like/' , methods=["GET"])
+@jwt_required()
+def get_all_user_of_like():
+    data = post_like.load(request.json)
+    response = all_like_by_post_id(post_id = data['post_id'])
+    return response
+
+
+
+
+
+
+
+
+
 # post comment
-@create_post_Comment.route("/post_comment" , methods = ['POST'])
+@create_post_Comment.route("/post_comment/" , methods = ['POST'])
 @jwt_required()
 def post_comment_by_user():
     data = post_comment_schema.load(request.json)
@@ -195,42 +283,18 @@ def post_comment_by_user():
 
 
 # update comment
-@update_comment.route("/update_comment",methods=['PATCH'])
+@update_comment.route("/update_comment/",methods=['PATCH'])
 @jwt_required()
 def post_update_comment():
     data = post_comment_update_schema.load(request.json)
     user_id = get_jwt_identity()
-    response = update_post_comment(db=db , comment_id=data['comment_id'] , comment=data['comment'])
+    response = update_post_comment(db=db , comment_id=data['comment_id'] , comment=data['comment'] , user_id=user_id)
     return response
 
 
-# get all post of user
-@getAllPostOfUser.route("/get_all_posts" , methods = ['GET'])
-@jwt_required()
-def get_all_post_by_user_id():
-    user_id = get_jwt_identity()
-    posts = get_all_posts_of_user(current_user_id=user_id)
-    return posts
-
-
-# get all like_user of  specific post
-@getAllUserOfLikeOfPostId.route('/get_user_of_like' , methods=["GET"])
-@jwt_required()
-def get_all_user_of_like():
-    data = post_like.load(request.json)
-    response = all_like_by_post_id(post_id = data['post_id'])
-    return response
-
-# get all comment_user of specific post
-@getAllUserOfCommentOfPostId.route('/get_user_of_comment' , methods=["GET"])
-@jwt_required(locations=['headers'])
-def get_all_user_of_comemnt():
-    data = post_id_rquest_schema.load(request.json)
-    response = all_comment_by_post_id(post_id = data['post_id'])
-    return response
 
 # comment reply
-@post_comment_reply.route("/comemnt_reply",methods=['POST'])
+@post_comment_reply.route("/comemnt_reply/",methods=['POST'])
 @jwt_required()
 def add_comment_reply():
     data = post_comment_reply_schema.load(request.json)
@@ -239,18 +303,37 @@ def add_comment_reply():
     return response
     
 
-
 # update comment reply
-@UpdateCommentReply.route("/update_comemnt_reply",methods=['PATCH'])
+@UpdateCommentReply.route("/update_comemnt_reply/",methods=['PATCH'])
 @jwt_required()
 def comemnt_reply_update():
     data = post_comment_reply_update_schema.load(request.json)
-    response = update_comment_reply(reply_id=data['reply_id'] , updated_comment_reply=data['comment_reply'] , db=db)
+    user_id = get_jwt_identity()
+    response = update_comment_reply(reply_id=data['reply_id'] , updated_comment_reply=data['comment_reply'] , db=db , user_id=user_id)
+    return response
+
+
+
+# get all comment_user of specific post
+@getAllUserOfCommentOfPostId.route('/get_user_of_comment/' , methods=["GET"])
+@jwt_required(locations=['headers'])
+def get_all_user_of_comemnt():
+    data = post_id_rquest_schema.load(request.json)
+    response = all_comment_by_post_id(post_id = data['post_id'])
+    return response
+
+
+# get all comment_reply_user of specific comment
+@getAllUserOfCommentOfPostId.route('/get_user_of_comment_reply/' , methods=["GET"])
+@jwt_required(locations=['headers'])
+def get_all_user_of_comemnt_reply():
+    data = post_comment_reply_request.load(request.json)
+    response = all_comment_reply_by_comment_id(comment_id = data['comment_id'])
     return response
 
 
 # comemnt like
-@commentLike.route("/comment_like" , methods = ['POST'])
+@commentLike.route("/comment_like/" , methods = ['POST'])
 @jwt_required()
 def post_comment_like_by_user():
     data = post_comment_like_request_schema.load(request.json)
@@ -260,7 +343,7 @@ def post_comment_like_by_user():
 
 
 # comment reply like
-@commentReplyLike.route("/comment_reply_like" , methods = ['POST'])
+@commentReplyLike.route("/comment_reply_like/" , methods = ['POST'])
 @jwt_required()
 def post_comment_reply_like_by_user():
     data = post_comment_reply_like_request_schema.load(request.json)
@@ -268,61 +351,58 @@ def post_comment_reply_like_by_user():
     response = post_comment_reply_like(reply_id=data['reply_id'], db=db , user_id=user_id)
     return response
 
+
 # delete comment 
-@commentDelete.route("/delete_comment",methods=['DELETE'])
+@commentDelete.route("/delete_comment/",methods=['DELETE'])
+@jwt_required()
 def post_comment_delete():
     data = post_comment_delete_request.load(request.json)
-    response = comment_delete(comment_id=data['comment_id'] , db=db)
+    user_id = get_jwt_identity()
+    response = comment_delete(comment_id=data['comment_id'] , db=db , user_id = user_id)
     return response
 
 
 
 # comment_reply delete
-@commentReplyDelete.route("/delete_comment_reply",methods=['DELETE'])
+@commentReplyDelete.route("/delete_comment_reply/",methods=['DELETE'])
 @jwt_required()
 def delete_comment_reply():
     data = post_comment_reply_delete_request.load(request.json)
-    response = comment_reply_delete(comment_reply_id=data['comment_reply_id'],db=db)
+    user_id = get_jwt_identity()
+    response = comment_reply_delete(comment_reply_id=data['comment_reply_id'],db=db,user_id = user_id)
     return response
 
+
+
 # comment_like delete
-@commentLikeDelete.route("/delete_comment_like",methods=['DELETE'])
+@commentLikeDelete.route("/delete_comment_like/",methods=['DELETE'])
 @jwt_required()
 def delete_comment_like():
     data = post_comment_like_delete_request.load(request.json)
-    response = comment_like_delete(comment_like_id=data['comment_like_id'] , db=db)
+    user_id = get_jwt_identity()
+    response = comment_like_delete(comment_like_id=data['comment_like_id'] , db=db , user_id=user_id)
     return response
 
 
 # comment_reply_like delete
-@commentReplyLikeDelete.route("/delete_comment_reply_like",methods=['DELETE'])
+@commentReplyLikeDelete.route("/delete_comment_reply_like/",methods=['DELETE'])
 @jwt_required()
 def delete_comment_reply_like():
     data = post_comment_like_delete_request.load(request.json)
-    response = comment_reply_like_delete(comment_like_id=data['comment_like_id'],db=db)
+    user_id = get_jwt_identity()
+    response = comment_reply_like_delete(comment_like_id=data['comment_like_id'],db=db , user_id=user_id)
     return response
 
 
-# post_delete
-@deletePostRequest.route("/delete_post",methods=['DELETE'])
-@jwt_required()
-def delete_user_post():
-    data = delete_post_request.load(request.json)
-    response = delete_post(db=db,post_id=data['post_id'])
-    return response
 
 
-# delete_post_like
-@deletePostLikeRequest.route("/delete_post_like",methods=['DELETE'])
-@jwt_required()
-def delete_user_post_like():
-    data = delete_post_like_request.load(request.json)
-    response = delete_post_like(db=db,like_id=data['like_id'])
-    return response
+
+
+
 
 
 # follow user
-@followUser.route("/follow_user" , methods=['POST'])
+@followUser.route("/follow_user/" , methods=['POST'])
 @jwt_required()
 def follow_user():
     data = user_follow_request_schema.load(request.json)
@@ -331,7 +411,7 @@ def follow_user():
     return response
 
 # accept request
-@FollowrequestAccept.route("/accept_request" , methods=['POST'])
+@FollowrequestAccept.route("/accept_request/" , methods=['POST'])
 @jwt_required()
 def accept_follow_user():
     data = user_follow_request_schema.load(request.json)
@@ -339,46 +419,8 @@ def accept_follow_user():
     response = store_in_follower_table(db=db , follow_by_id=data['user_id'] , current_user_id=current_user_id)
     return response
 
-# add return in data
-# add delete user check
 
 # jwt error
-# set path in {url}
-# code clean
+# code clean [arrange files]
+# final test
 
-
-# get all user
-@getAllUser.route("/get_all_user" , methods = ['GET'])
-@jwt_required()
-def get_all_user_form_db():
-    response = get_all_user(User=User)
-    return response
-    
-
-# get user by username
-@read_user.route("/get_user/<string:username>" , methods = ['GET'])
-@jwt_required()
-def read_user_by_username(username):
-    response =  get_user_by_username(User=User , username=username)
-    print(response)
-    return user_response_single.dump(response)
-
-
-# get by id
-@read_user.route("/get_by_id" , methods = ['GET'])
-@jwt_required()
-def read_user_by_id():
-    id = get_jwt_identity()
-    response =  get_user_by_id(user_id = id)
-    return user_response_single.dump(response)
-
-
-
-
-# get user by email [Temporary]
-@read_user.route("/get_user" , methods = ['GET'])
-@jwt_required()
-def read_user_by_email():
-    data = request.args.get("data")
-    respons =  get_user_by_email(User=User , email=data)    
-    return user_response_single.dump(respons)

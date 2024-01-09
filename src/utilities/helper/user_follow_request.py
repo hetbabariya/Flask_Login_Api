@@ -28,6 +28,7 @@ def user_follow(db , follow_by_id , current_user_id):
         db.session.add(folloW_data)
         db.session.commit()
 
+        response = jsonify({"message" : "user add successfuly"}),200
     # for private account
     else : 
 
@@ -36,7 +37,7 @@ def user_follow(db , follow_by_id , current_user_id):
         db.session.add(follow_request_data)
         db.session.commit()
 
-    response = jsonify({"message" : "user request successfuly"}),200
+        response = jsonify({"message" : "send request successfuly"}),200
 
     return response
 

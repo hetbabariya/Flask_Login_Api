@@ -2,7 +2,7 @@ from src.database.schema.user import UserResponse , UserRequest , UserForgrtPwd 
 from src.database.schema.post import CreatePost , UpdatePost , ResponsePost , DeletePostRequest , postCreateResponse
 from src.database.schema.post_like import PostLikeSchema , PostLikeResponse , DeletePostLikeRequest
 from src.database.schema.post_comment import PostCommentSchema , PostCommentUpdateSchema , PostCommentResponseSchema , PostRequestForCommentUser , PostCommentDelRequest
-from src.database.schema.post_comment_reply import PostCommentReplySchema , PostCommentReplyUpdateSchema , PostCommentReplyResponseSchema , PostCommentRemoveRequest
+from src.database.schema.post_comment_reply import PostCommentReplySchema , PostCommentReplyUpdateSchema , PostCommentReplyResponseSchema , PostCommentRemoveRequest , PostCommentReplyRequest
 from src.database.schema.comemnt_and_reply_like import commentLikeRequestSchema , commentLikeResponseSchema , commmentReplyLikeRequestSchema  , commentLikeDelete
 from src.database.schema.follow import UserfollowRequestSchema
 
@@ -38,3 +38,5 @@ user_follow_request_schema = UserfollowRequestSchema()
 user_registration_response_schema = UserRegisterResponse()
 all_user_response_schema = AllUserResponse()
 post_create_response_schema = postCreateResponse()
+post_comment_reply_all_user_response_schema = PostCommentReplyResponseSchema(many=True)
+post_comment_reply_request = PostCommentReplyRequest()

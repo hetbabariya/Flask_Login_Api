@@ -10,4 +10,4 @@ class PostLikeResponse(PostLikeSchema):
 
 
 class DeletePostLikeRequest(ma.Schema):
-    like_id = fields.UUID()
+    post_id = fields.UUID()

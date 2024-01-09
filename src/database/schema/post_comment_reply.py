@@ -13,5 +13,9 @@ class PostCommentReplyUpdateSchema(ma.Schema):
     reply_id = fields.UUID()
     comment_reply = fields.String()
 
+class PostCommentReplyRequest(ma.Schema):
+    comment_id = fields.UUID()
+
+
 class PostCommentRemoveRequest(ma.Schema):
     comment_reply_id = fields.UUID()

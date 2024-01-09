@@ -4,7 +4,7 @@ from marshmallow import fields
 
 class UserRequest(ma.Schema):
     username = fields.Str(error_messages={"ERROR" : "It is required"})
-    email = fields.Str(error_messages={"ERROR" : "It is required"})
+    email = fields.Email(error_messages={"ERROR" : "It is required"})
     password = fields.Str(error_messages={"ERROR" : "It is required"})
     is_public = fields.Boolean(error_messages={"ERROR" : "It is required"})
 

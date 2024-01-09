@@ -61,10 +61,10 @@ def verify_hash_otp(input_otp, hashed_otp):
 
 
 # send and store otp
-def store_otp(db , User):
+def store_otp(db):
     try:
         user_request_data = request.get_json()
-        user = get_user_by_email(User,user_request_data['email'] )
+        user = get_user_by_email(user_request_data['email'] )
 
         if not user_request_data :
              abort(404 , {"message": "email Not Found"})
@@ -76,7 +76,6 @@ def store_otp(db , User):
         Hashed_otp = generate_hash_otp(otp)
         user.OTP = Hashed_otp
         user.otp_send_at = datetime.now()
-        print(user.otp_send_at)
         db.session.commit()
 
         return jsonify({"message" : "OTP sent successfuly"}),200
@@ -85,15 +84,12 @@ def store_otp(db , User):
         return jsonify({"error " : str(e)})
     
 # verify OTP
-def verify_otp(User , email , otp ):
+def verify_otp(email , otp ):
     try:
-
-        user_data = get_user_by_email(User = User,email = email )
-        print("user_Data",user_data)
+        user_data = get_user_by_email(email = email )
         if user_data is None:
             abort(404, 'OTP Not Found')
 
-        print("user_Dataafter",user_data.otp_send_at)
         current_utc_time = datetime.now()
 
         
@@ -112,12 +108,10 @@ def verify_otp(User , email , otp ):
     
 
 # forget password 
-def forget_password(new_pwd , email , otp , User):
+def forget_password(new_pwd , email , otp):
     try:
         
-        user_data = get_user_by_email(User,email )
-        print("user_data" , user_data)
-        print("user_data" , user_data.otp_send_at)
+        user_data = get_user_by_email(email )
         current_utc_time = datetime.now()
 
         if current_utc_time > user_data.otp_send_at + timedelta(minutes=3):
@@ -137,7 +131,7 @@ def forget_password(new_pwd , email , otp , User):
         return jsonify({"error " : str(e)})
     
 # change pwd
-def change_password(old_pwd , new_pwd , current_user_id , User):
+def change_password(old_pwd , new_pwd , current_user_id):
     try :
         user_data = get_user_by_id(user_id=current_user_id)
 
@@ -154,7 +148,7 @@ def change_password(old_pwd , new_pwd , current_user_id , User):
     
 
 # delete user
-def delete_user(current_user_id , User):
+def delete_user(current_user_id):
     user_data = get_user_by_id(user_id=current_user_id)
     user_data.is_delete = True
     db.session.commit()

@@ -6,22 +6,23 @@ from src.utilities.functionality import verify_password
 
 
 # login 
-def login_user(User , username , password):
-    user_data = get_user_by_username(User = User , username=username)
+def login_user(username , password):
+    try : 
+        user_data = get_user_by_username(username=username)
 
-    if not user_data or not verify_password(plain_password= password, hashed_password=user_data.password) :
-        abort(404 , 'Wrong Username and password')
+        if not user_data or not verify_password(plain_password= password, hashed_password=user_data.password) :
+            abort(404 , 'Wrong Username and password')
 
-    if user_data.is_delete == True:
-        abort(404,"Data Not Found")
+        if user_data.is_delete == True:
+            abort(404,"Data Not Found")
 
-    access_token =  create_access_token(identity=user_data.id)
-    referesh_token = create_refresh_token(identity=user_data.id)
+        access_token =  create_access_token(identity=user_data.id)
+        referesh_token = create_refresh_token(identity=user_data.id)
 
-    # g.user = decode_token(access_token)
-    
+        return jsonify(access_token = access_token , refersh_token = referesh_token)
+    except Exception as e :
+        return jsonify({"error " : str(e)})
 
-    return jsonify(access_token = access_token , refersh_token = referesh_token)
 
 # logout
 def logout_user():
