@@ -1,6 +1,6 @@
 from flask import jsonify
-from src.utilities.helper.get_post_like_by_id import get_post_like_by_id
-from src.utilities.helper.get_post_by_postid import get_post_by_post_id
+from src.utilities.helper.post.get_post_like_by_id import get_post_like_by_id
+from src.utilities.helper.post.get_post_by_postid import get_post_by_post_id
 
 def delete_post_like(db , post_id , user_id):
 

@@ -1,5 +1,5 @@
 from flask import jsonify
-from src.utilities.helper.get_comment_by_id import get_comment_by_id
+from src.utilities.helper.comment.get_comment_by_id import get_comment_by_id
 from src.database.model.comment_reply import PostCommentReply
 from schemaObj import post_comment_reply_response_schema
 

@@ -6,9 +6,9 @@ from flask import jsonify , abort , request
 from datetime import datetime  , timedelta
 import hashlib
 
-from src.database.crud import get_user_by_email , generate_hash_password , get_user_by_id
+from src.utilities.helper.User.crud import get_user_by_email , generate_hash_password , get_user_by_id
 from src.database.model.user import db
-from src.database.crud import pwd_context
+from src.utilities.helper.User.crud import pwd_context
 
 
 

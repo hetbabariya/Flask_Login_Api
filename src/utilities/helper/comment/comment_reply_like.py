@@ -1,5 +1,5 @@
 from flask import abort , jsonify
-from src.utilities.helper.get_comment_reply_by_id import get_comment_reply_by_id
+from src.utilities.helper.comment.get_comment_reply_by_id import get_comment_reply_by_id
 from src.database.model.post_comment_like import PostCommentLike
 from schemaObj import post_comment_like_response_schema
 

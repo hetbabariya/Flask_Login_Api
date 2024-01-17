@@ -1,20 +1,14 @@
 from flask import jsonify , abort
-from src.database.crud import get_user_by_id
-from src.utilities.helper.get_post_by_postid import get_post_by_post_id
+from src.utilities.helper.User.crud import get_user_by_id
+from src.utilities.helper.post.get_post_by_postid import get_post_by_post_id
 from src.database.model.user import User
 
 def post_like_by_user(db , PostLike , post_id , current_user_id):
     try :
         user = get_user_by_id(user_id=current_user_id)
         
-        # if not user:
-        #     return jsonify({"error":"User does not exist"}), 404
-        
         post = get_post_by_post_id(post_id=post_id)
 
-        # if not post :
-        #     return jsonify({"error":"User does not exist"}), 404
-        
         # check like already exist 
         existing_like = PostLike.query.filter_by(post_id=post_id, user_id=current_user_id).first()
         if existing_like:

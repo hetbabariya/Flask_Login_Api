@@ -1,6 +1,6 @@
 from flask import jsonify , abort
 from schemaObj import post_response
-from src.database.crud import get_user_by_id
+from src.utilities.helper.User.crud import get_user_by_id
 from src.database.model.post_model import Post
 
 def get_post_by_post_id( post_id):

@@ -1,6 +1,6 @@
 from flask import jsonify , abort
 from datetime import datetime
-from src.utilities.helper.get_comment_by_id import get_comment_by_id
+from src.utilities.helper.comment.get_comment_by_id import get_comment_by_id
 
 
 def update_post_comment(db , comment_id , comment , user_id):

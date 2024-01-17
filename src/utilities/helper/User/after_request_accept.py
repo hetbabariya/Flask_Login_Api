@@ -1,5 +1,5 @@
 from flask import jsonify , abort
-from src.database.crud import get_user_by_id
+from src.utilities.helper.User.crud import get_user_by_id
 from src.database.model.follower_following import FollowerFollowing
 from src.database.model.follow_request import FollowRequest
 

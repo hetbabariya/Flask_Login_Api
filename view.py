@@ -6,31 +6,31 @@ from src.database.model.post_model import Post
 from src.database.model.post_like import PostLike
 from src.database.model.post_comment import PostComment
 
-from src.database.crud import create_user , get_user_by_username , get_user_by_email , get_user_by_id ,get_all_user
-from src.utilities.functionality import verify_otp , store_otp , forget_password , change_password , delete_user
+from src.utilities.helper.User.crud import create_user , get_user_by_username , get_user_by_email , get_user_by_id ,get_all_user
+from src.utilities.helper.User.functionality import verify_otp , store_otp , forget_password , change_password , delete_user
 from flask_jwt_extended import jwt_required
 from src.auth.functionality import login_user , logout_user
-from src.utilities.helper.post_create import create_post_In_db
-from src.utilities.helper.post_caption_update import  update_post_caption
-from src.utilities.helper.post_like import  post_like_by_user
-from src.utilities.helper.post_comment import add_post_comment
-from src.utilities.helper.post_comment_update import update_post_comment
-from src.utilities.helper.get_all_post_of_user import get_all_posts_of_user
-from src.utilities.helper.post_id_all_like import all_like_by_post_id
-from src.utilities.helper.post_id_all_comment import all_comment_by_post_id
-from src.utilities.helper.post_id_all_comment import all_comment_reply_by_comment_id
-from src.utilities.helper.comment_reply import create_comment_reply
-from src.utilities.helper.comment_reply_update import update_comment_reply
-from src.utilities.helper.comment_like import post_comment_like
-from src.utilities.helper.comment_reply_like import post_comment_reply_like
-from src.utilities.helper.comment_delete import comment_delete
-from src.utilities.helper.comment_reply_delete import comment_reply_delete
-from src.utilities.helper.comment_like_delete import comment_like_delete
-from src.utilities.helper.comment_reply_like_delete import comment_reply_like_delete
-from src.utilities.helper.delete_post import delete_post
-from src.utilities.helper.delete_post_like import delete_post_like
-from src.utilities.helper.user_follow_request import user_follow
-from src.utilities.helper.after_request_accept import store_in_follower_table
+from src.utilities.helper.post.post_create import create_post_In_db
+from src.utilities.helper.post.post_caption_update import  update_post_caption
+from src.utilities.helper.post.post_like import  post_like_by_user
+from src.utilities.helper.comment.post_comment import add_post_comment
+from src.utilities.helper.comment.post_comment_update import update_post_comment
+from src.utilities.helper.post.get_all_post_of_user import get_all_posts_of_user
+from src.utilities.helper.post.post_id_all_like import all_like_by_post_id
+from src.utilities.helper.comment.post_id_all_comment import all_comment_by_post_id
+from src.utilities.helper.comment.post_id_all_comment import all_comment_reply_by_comment_id
+from src.utilities.helper.comment.comment_reply import create_comment_reply
+from src.utilities.helper.comment.comment_reply_update import update_comment_reply
+from src.utilities.helper.comment.comment_like import post_comment_like
+from src.utilities.helper.comment.comment_reply_like import post_comment_reply_like
+from src.utilities.helper.comment.comment_delete import comment_delete
+from src.utilities.helper.comment.comment_reply_delete import comment_reply_delete
+from src.utilities.helper.comment.comment_like_delete import comment_like_delete
+from src.utilities.helper.comment.comment_reply_like_delete import comment_reply_like_delete
+from src.utilities.helper.post.delete_post import delete_post
+from src.utilities.helper.post.delete_post_like import delete_post_like
+from src.utilities.helper.User.user_follow_request import user_follow
+from src.utilities.helper.User.after_request_accept import store_in_follower_table
 from schemaObj import (
                         User_forgrt_pwd ,
                         user_response ,

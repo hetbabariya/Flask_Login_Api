@@ -1,6 +1,6 @@
 from flask import jsonify , abort
-from src.utilities.helper.get_comment_by_id import get_comment_by_id
-from src.utilities.helper.get_post_by_postid import get_post_by_post_id
+from src.utilities.helper.comment.get_comment_by_id import get_comment_by_id
+from src.utilities.helper.post.get_post_by_postid import get_post_by_post_id
 
 def comment_delete(comment_id , db , user_id):
 

@@ -1,8 +1,8 @@
 # from werkzeug.security import check_password_hash
 from flask_jwt_extended import create_access_token , unset_jwt_cookies ,create_refresh_token , decode_token
 from flask import abort , jsonify , make_response , g
-from src.database.crud import get_user_by_username
-from src.utilities.functionality import verify_password
+from src.utilities.helper.User.crud import get_user_by_username
+from src.utilities.helper.User.functionality import verify_password
 
 
 # login 
